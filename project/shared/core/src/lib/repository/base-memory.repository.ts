@@ -29,6 +29,10 @@ export abstract class BaseMemoryRepository<T extends Entity<EntityIdType>> imple
   }
 
   public async deleteById(id: T['id']): Promise<void> {
+    if (!this.entities.has(id)) {
+      throw new Error(`Entity with id ${id} doesn't exist`);
+    }
+
     this.entities.delete(id);
   }
 }
