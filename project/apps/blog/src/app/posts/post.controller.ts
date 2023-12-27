@@ -1,9 +1,11 @@
 import { Controller, Body, Post, Patch, Get, Delete, Param, Query, HttpStatus, HttpCode } from '@nestjs/common';
+import { DEFAULT_LIMIT_ENTITIES } from '@project/shared/constants';
 import { fillDTO } from '@project/shared/helpers';
 import { PostDTO } from './dto/post.dto';
 import { PostService } from './post.service';
 import { PostRDO } from './rdo/created-post.rdo';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { POST_NOT_FOUND } from './post.constant';
 
 @ApiTags('blog-posts')
 @Controller('posts')
@@ -64,20 +66,21 @@ export class PostController {
 
     @ApiResponse({
         type: PostRDO,
+        isArray: true,
         status: HttpStatus.OK,
     })
     @Get()
     public async index(
-        @Query('limit') limit: string
+        @Query('limit') limit?: string
     ): Promise<PostRDO> {
-        const posts = await this.postService.find(Number(limit));
+        const postCount = Number(limit) ? Number(limit) : DEFAULT_LIMIT_ENTITIES;
+        const posts = await this.postService.find(postCount);
         const plainPosts = posts.map((post) => post.toPOJO());
 
         return fillDTO<PostRDO, Record<string, typeof plainPosts>>(PostRDO, {'posts': plainPosts})
     }
 
     @ApiResponse({
-        type: PostRDO,
         status: HttpStatus.NO_CONTENT,
         description: 'The post has been successfully deleted'
     })

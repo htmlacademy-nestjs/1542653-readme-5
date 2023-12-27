@@ -8,6 +8,7 @@ import { VideoPostEntity } from './entities/video-post.entity';
 import { PhotoPostEntity } from './entities/photo-post.entity';
 import { QuotePostEntity } from './entities/quote-post.entity';
 import { LinkPostEntity } from './entities/link-post.entity';
+import { POST_NOT_FOUND } from './post.constant';
 
 @Injectable()
 export class PostService {
