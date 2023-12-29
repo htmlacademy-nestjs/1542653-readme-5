@@ -4,7 +4,7 @@ import { fillDTO } from '@project/shared/helpers';
 import { PostDTO } from './dto/post.dto';
 import { PostService } from './post.service';
 import { PostRDO } from './rdo/created-post.rdo';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { POST_NOT_FOUND } from './post.constant';
 
 @ApiTags('blog-posts')
@@ -27,6 +27,11 @@ export class PostController {
         return fillDTO(PostRDO, createdPost.toPOJO());
     }
 
+    @ApiParam({
+        name: 'id',
+        required: true,
+        description: 'Uniq ID of updated post'
+    })
     @ApiResponse({
         type: PostRDO,
         status: HttpStatus.OK,
@@ -39,7 +44,7 @@ export class PostController {
     @Patch(':id')
     @HttpCode(HttpStatus.OK)
     public async update(
-        @Param() id: string,
+        @Param('id') id: string, 
         @Body() dto: PostDTO,
     ): Promise<PostRDO> {
         const updatedPost = await this.postService.updatePost(dto, id);
@@ -47,6 +52,11 @@ export class PostController {
         return fillDTO(PostRDO, updatedPost.toPOJO());
     }
 
+    @ApiParam({
+        name: 'id',
+        required: true,
+        description: 'Uniq id of requested post'
+    })
     @ApiResponse({
         type: PostRDO,
         status: HttpStatus.OK,
@@ -57,7 +67,7 @@ export class PostController {
     })
     @Get(':id')
     public async show(
-        @Param() id: string
+        @Param('id') id: string
     ): Promise<PostRDO> {
         const post = await this.postService.findPost(id);
 
@@ -68,6 +78,11 @@ export class PostController {
         type: PostRDO,
         isArray: true,
         status: HttpStatus.OK,
+    })
+    @ApiQuery({
+        name: 'limit',
+        required: false,
+        description: `Limit of posts, default: ${DEFAULT_LIMIT_ENTITIES}`
     })
     @Get()
     public async index(
@@ -80,6 +95,11 @@ export class PostController {
         return fillDTO<PostRDO, Record<string, typeof plainPosts>>(PostRDO, {'posts': plainPosts})
     }
 
+    @ApiParam({
+        name: 'id',
+        required: true,
+        description: 'Uniq id of deleted post'
+    })
     @ApiResponse({
         status: HttpStatus.NO_CONTENT,
         description: 'The post has been successfully deleted'
@@ -91,7 +111,7 @@ export class PostController {
     @Delete(':id')
     @HttpCode(HttpStatus.NO_CONTENT)
     async delete(
-        @Param() id: string,
+        @Param('id') id: string,
     ): Promise<void> {
         await this.postService.deletePost(id);
     }

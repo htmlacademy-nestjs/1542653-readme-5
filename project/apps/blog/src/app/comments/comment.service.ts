@@ -16,8 +16,8 @@ export class CommentService {
     return createdComment;
   }
 
-  public async findComments(limit: number): Promise<CommentEntity[]> {
-    const comments = await this.commentRepository.find();
+  public async findComments(postId: string, limit: number): Promise<CommentEntity[]> {
+    const comments = await this.commentRepository.find(postId);
     return comments.slice(0, limit);
   }
 
