@@ -12,13 +12,13 @@ export class CommentRepository extends BaseMemoryRepository<CommentEntity> {
 
   public find(postId: string): CommentEntity[] {
     return Array.from(this.entities.entries())
-    .filter(([_id, comment]) => comment.postId === postId)
-    .map(([id, comment]) => {
-      return new CommentEntity({
-        id,
-        ...comment,
+      .filter(([_id, comment]) => comment.postId === postId)
+      .map(([id, comment]) => {
+        return new CommentEntity({
+          id,
+          ...comment,
+        })
       })
-    })
   }
 }
 

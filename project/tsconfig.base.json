@@ -16,6 +16,7 @@
     "baseUrl": ".",
     "paths": {
       "@project/constants": ["constants/src/index.ts"],
+      "@project/shared/config/users": ["shared/config/users/src/index.ts"],
       "@project/shared/constants": ["shared/constants/src/index.ts"],
       "@project/shared/core": ["shared/core/src/index.ts"],
       "@project/shared/helpers": ["shared/helpers/src/index.ts"],
