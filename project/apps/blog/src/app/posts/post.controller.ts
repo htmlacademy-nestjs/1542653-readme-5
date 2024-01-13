@@ -1,10 +1,10 @@
 import { Controller, Body, Post, Patch, Get, Delete, Param, Query, HttpStatus, HttpCode } from '@nestjs/common';
+import { ApiOkResponse, ApiParam, ApiQuery, ApiResponse, ApiTags, getSchemaPath } from '@nestjs/swagger';
 import { DEFAULT_LIMIT_ENTITIES } from '@project/shared/constants';
 import { fillDTO } from '@project/shared/helpers';
 import { PostDTO } from './dto/post.dto';
 import { PostService } from './post.service';
 import { PostRDO } from './rdo/created-post.rdo';
-import { ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { POST_NOT_FOUND } from './post.constant';
 
 @ApiTags('blog-posts')
@@ -74,8 +74,15 @@ export class PostController {
         return fillDTO(PostRDO, post.toPOJO());
     }
 
-    @ApiResponse({
-        type: PostRDO,
+    @ApiOkResponse({
+        schema: {
+            properties: {
+                posts: {
+                  type: 'array',
+                  items: { $ref: getSchemaPath(PostRDO) }
+                }
+              }
+        },
         isArray: true,
         status: HttpStatus.OK,
     })
@@ -88,8 +95,7 @@ export class PostController {
     public async index(
         @Query('limit') limit?: string
     ): Promise<PostRDO> {
-        const postCount = Number(limit) ? Number(limit) : DEFAULT_LIMIT_ENTITIES;
-        const posts = await this.postService.find(postCount);
+        const posts = await this.postService.find(limit);
         const plainPosts = posts.map((post) => post.toPOJO());
 
         return fillDTO<PostRDO, Record<string, typeof plainPosts>>(PostRDO, {'posts': plainPosts})
