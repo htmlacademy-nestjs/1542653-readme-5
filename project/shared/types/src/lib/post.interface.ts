@@ -7,4 +7,5 @@ export interface PostInterface {
   authorId?: string;
   status: string;
   likesCount: number;
+  type: string;
 }

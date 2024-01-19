@@ -1,5 +1,8 @@
 import { PrismaClient } from '@prisma/client';
-import { PostTypes } from '@project/shared/types';
+
+// Закоментировал так как ts-node при исполнении не видит пути через @project
+// eslint-disable-next-line @nx/enforce-module-boundaries
+import { PostTypes } from '../../../../../shared/types/src/lib/post.type';
 
 function randomInt (a = 1, b = 0) {
     const lower = Math.ceil(Math.min(a, b));
@@ -10,7 +13,7 @@ function randomInt (a = 1, b = 0) {
 function getRandomElement <T>(list: T[]): T {
     const randomindex = randomInt(0, list.length);
     return list[randomindex];
-} 
+}
 
 const mockUsersId = [
     '65a3f63cc013e4c03afc6a9d',
@@ -42,7 +45,7 @@ const mockComments = [
     },
     {
         text: 'Еще один новый комментарий',
-        authorId: getRandomElement(mockUsersId), 
+        authorId: getRandomElement(mockUsersId),
     },
     {
         text: 'Не придумал лучший комментарий, поэтому оставлю просто этот текст',
@@ -72,7 +75,7 @@ const mockPosts = mockUsersId.map((id, idx) => {
         comments: mockComments.slice(0, randomNumber),
         url: type === PostTypes.Link ? 'http://www.sample.com/?education=orange&reaction=detail' : undefined,
         photo: type === PostTypes.Photo ? 'https://pics4.city-data.com/cpicc/cfiles34653.jpg' : undefined,
-        text: type === PostTypes.Text || type === PostTypes.Quote ? 'Simple text' : undefined, 
+        text: type === PostTypes.Text || type === PostTypes.Quote ? 'Simple text' : undefined,
         quoteAuthorId: type === PostTypes.Quote ? anotherAuthorId : undefined,
         announcement: type === PostTypes.Text ? 'Another text' : undefined,
         videoUrl: type === PostTypes.Video ? 'http://sample.edu/hobbies.html' : undefined,
@@ -89,7 +92,7 @@ async function seedDb(prismaClient: PrismaClient): Promise<void> {
             }
         })
     }
-    
+
     for (const tag of mockTags) {
         await prismaClient.tag.upsert({
             where: { id: tag.id },
@@ -101,7 +104,7 @@ async function seedDb(prismaClient: PrismaClient): Promise<void> {
         })
     }
 
-    for (const post of mockPosts) {     
+    for (const post of mockPosts) {
         await prismaClient.post.create({
             data: {
                 name: post.name,
@@ -125,11 +128,11 @@ async function seedDb(prismaClient: PrismaClient): Promise<void> {
     }
 
     console.info('🤘️ Database was filled');
-} 
+}
 
 async function bootstrap() {
     const prismaClient = new PrismaClient();
-  
+
     try {
       await seedDb(prismaClient);
       globalThis.process.exit(0);
@@ -140,5 +143,5 @@ async function bootstrap() {
       await prismaClient.$disconnect();
     }
   }
-  
+
   bootstrap();

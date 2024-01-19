@@ -88,9 +88,9 @@ export class PostService {
 
     }
 
-    public async find(limit?: string): Promise<PostEntity[]> {
+    public async find(authorId: string, limit?: string): Promise<PostEntity[]> {
         const postCount = Number(limit) ? Number(limit) : DEFAULT_LIMIT_ENTITIES;
-        const posts = await this.postRepository.find(postCount);
+        const posts = await this.postRepository.find(authorId, postCount);
         return posts;
     }
 

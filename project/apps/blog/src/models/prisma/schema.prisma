@@ -26,7 +26,7 @@ model Post {
   author        User @relation(fields: [authorId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   authorId      String @map("author_id")
   status        String
-  likes         Int @default(0)
+  likesCount    Int @default(0) @map("likes_count")
   type          String
   comments      Comment[]
   url           String?

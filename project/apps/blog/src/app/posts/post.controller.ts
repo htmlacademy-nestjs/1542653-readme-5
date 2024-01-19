@@ -44,7 +44,7 @@ export class PostController {
     @Patch(':id')
     @HttpCode(HttpStatus.OK)
     public async update(
-        @Param('id') id: string, 
+        @Param('id') id: string,
         @Body() dto: PostDTO,
     ): Promise<PostRDO> {
         const updatedPost = await this.postService.updatePost(dto, id);
@@ -93,9 +93,10 @@ export class PostController {
     })
     @Get()
     public async index(
-        @Query('limit') limit?: string
+        @Query('authorId') authorId?: string, // Временное решение, пока нет аутентификации, после буду  брать данные из токена
+        @Query('limit') limit?: string,
     ): Promise<PostRDO> {
-        const posts = await this.postService.find(limit);
+        const posts = await this.postService.find(authorId, limit);
         const plainPosts = posts.map((post) => post.toPOJO());
 
         return fillDTO<PostRDO, Record<string, typeof plainPosts>>(PostRDO, {'posts': plainPosts})

@@ -73,7 +73,7 @@
         "command": "npx prisma migrate reset --schema ./schema.prisma --force --skip-generate --skip-seed",
         "cwd": "apps/blog/src/models/prisma"
       }
-    }, 
+    },
     "db:generate": {
       "executor": "nx:run-commands",
       "options": {
@@ -84,7 +84,7 @@
     "db:seed": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "npx ts-node seed.ts",
+        "command": "npx ts-node ./seed.ts",
         "cwd": "apps/blog/src/models/prisma"
       }
     }

@@ -19,9 +19,7 @@ export class CommentService {
 
   public async findComments(postId: string, limit?: string): Promise<CommentEntity[]> {
     const commentCount = Number(limit) ? Number(limit) : DEFAULT_LIMIT_ENTITIES;
-    const comments = await this.commentRepository
-      .find(postId)
-      .slice(0, commentCount);
+    const comments = await this.commentRepository.find(postId, commentCount);
     return comments;
   }
 
