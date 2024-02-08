@@ -51,10 +51,10 @@ export class CommentController {
   public async index(
     @Param('id') id: string,
     @Query() limit?: string,
-  ): Promise<CommentRDO> {
+  ): Promise<CommentRDO[]> {
     const comments = await this.commentService.findComments(id, limit);
-    const plainComments = comments.map((comment) => comment.toPOJO());
-    return fillDTO<CommentRDO, Record<string, typeof plainComments>>(CommentRDO, {'comments': plainComments});
+    const plainComments = comments.map((comment) => fillDTO(CommentRDO, comment.toPOJO()));
+    return plainComments;
   }
 
   @ApiResponse({

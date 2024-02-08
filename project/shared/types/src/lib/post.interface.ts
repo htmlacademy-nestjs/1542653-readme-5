@@ -8,4 +8,10 @@ export interface PostInterface {
   status: string;
   likesCount: number;
   type: string;
+  announcement?: string;
+  text?: string;
+  url?: string;
+  quoteAuthorId?: string;
+  photo?: string;
+  videoUrl?: string;
 }

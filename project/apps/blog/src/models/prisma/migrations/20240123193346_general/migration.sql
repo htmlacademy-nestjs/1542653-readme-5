@@ -11,7 +11,7 @@ CREATE TABLE "posts" (
     "name" TEXT NOT NULL,
     "author_id" TEXT NOT NULL,
     "status" TEXT NOT NULL,
-    "likes" INTEGER NOT NULL DEFAULT 0,
+    "likes_count" INTEGER NOT NULL DEFAULT 0,
     "type" TEXT NOT NULL,
     "url" TEXT,
     "photo" TEXT,
@@ -39,10 +39,10 @@ CREATE TABLE "tags" (
 CREATE TABLE "comments" (
     "id" TEXT NOT NULL,
     "text" TEXT NOT NULL,
-    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updated_at" TIMESTAMP(3) NOT NULL,
     "author_id" TEXT NOT NULL,
     "post_id" TEXT NOT NULL,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "comments_pkey" PRIMARY KEY ("id")
 );

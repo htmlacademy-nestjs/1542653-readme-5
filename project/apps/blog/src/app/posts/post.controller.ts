@@ -70,7 +70,6 @@ export class PostController {
         @Param('id') id: string
     ): Promise<PostRDO> {
         const post = await this.postService.findPost(id);
-
         return fillDTO(PostRDO, post.toPOJO());
     }
 
@@ -95,11 +94,10 @@ export class PostController {
     public async index(
         @Query('authorId') authorId?: string, // Временное решение, пока нет аутентификации, после буду  брать данные из токена
         @Query('limit') limit?: string,
-    ): Promise<PostRDO> {
+    ): Promise<PostRDO[]> {
         const posts = await this.postService.find(authorId, limit);
-        const plainPosts = posts.map((post) => post.toPOJO());
-
-        return fillDTO<PostRDO, Record<string, typeof plainPosts>>(PostRDO, {'posts': plainPosts})
+        const plainPosts = posts.map((post) => fillDTO(PostRDO, post.toPOJO()));
+        return plainPosts;
     }
 
     @ApiParam({

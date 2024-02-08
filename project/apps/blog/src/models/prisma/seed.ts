@@ -11,7 +11,7 @@ function randomInt (a = 1, b = 0) {
   };
 
 function getRandomElement <T>(list: T[]): T {
-    const randomindex = randomInt(0, list.length);
+    const randomindex = randomInt(0, list.length - 1);
     return list[randomindex];
 }
 

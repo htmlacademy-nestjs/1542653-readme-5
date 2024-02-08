@@ -17,7 +17,6 @@ export class PostRepository extends BasePrismaRepository<PostEntity, PostInterfa
         where: { id: id },
         include: {
           tags: true,
-          comments: true,
         }
       });
 
@@ -31,22 +30,34 @@ export class PostRepository extends BasePrismaRepository<PostEntity, PostInterfa
     public async save(entity: PostEntity): Promise<PostEntity> {
       const document = entity.toPOJO();
       const authorId = entity.authorId;
+
       const createdPost = await this.client.post.create({
         data: {
           name: document.name,
+          tags: {
+            connect: document.tags.map((tag) => ({id: tag.id})),
+          },
+          authorId: authorId,
           status: document.status,
           type: document.type,
-          tags: {
-            connect: document.tags.map((tag) => {
-              return { id: tag.id }
-            })
+          url: document.url,
+          photo: document.photo,
+          text: document.text,
+          quoteAuthorId: document.quoteAuthorId,
+          announcement: document.announcement,
+          videoUrl: document.videoUrl,
+          comments: {
+            connect: []
           },
-          author: {
-            connect: { id: authorId }
-          }
+          likesCount: 0,
+          // author: {
+          //   connect: { id: authorId }
+          // }
         },
       });
+
       entity.id = createdPost.id;
+     
       return entity;
     }
 
@@ -55,7 +66,6 @@ export class PostRepository extends BasePrismaRepository<PostEntity, PostInterfa
         where: { authorId: authorId },
         include: {
           tags: true,
-          comments: true,
         },
         take: limit
       })
@@ -70,18 +80,27 @@ export class PostRepository extends BasePrismaRepository<PostEntity, PostInterfa
       const updatedEntity = await this.client.post.update({
         where: { id: id },
         data: {
-          ...updatedDocument,
+          //...updatedDocument,
+          name: updatedDocument.name,
+          status: updatedDocument.status,
+          type: updatedDocument.type,
+          announcement: updatedDocument.announcement,
+          text: updatedDocument.text,
+          url: updatedDocument.url,
+          quoteAuthorId: updatedDocument.quoteAuthorId,
+          photo: updatedDocument.photo,
+          videoUrl: updatedDocument.videoUrl,
+          likesCount: 0,
           tags: {
-            connect: updatedDocument.tags.map((tag) => {
+            connect: updatedDocument.tags?.length ? updatedDocument.tags.map((tag) => {
               return { id: tag.id }
-            })
+            }) : undefined,
           },
           author: {
             connect: { id: authorId }
           },
         },
         include: {
-          comments: true,
           tags: true,
         }
       });

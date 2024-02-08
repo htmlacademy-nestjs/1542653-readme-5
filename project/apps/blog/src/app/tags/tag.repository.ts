@@ -1,8 +1,10 @@
+import { Injectable } from '@nestjs/common';
 import { PrismaClientService } from '@project/shared/config/blog';
 import { BasePrismaRepository } from '@project/shared/core';
 import { TagInterface } from '@project/shared/types';
 import { TagEntity } from './tag.entity';
 
+@Injectable()
 export class TagRepository extends BasePrismaRepository<TagEntity, TagInterface> {
 
   constructor(
@@ -44,5 +46,13 @@ export class TagRepository extends BasePrismaRepository<TagEntity, TagInterface>
     })
 
     return this.createEntityFromDocument(document);
+  }
+
+  public async find(limit: number): Promise<TagEntity[]> {
+    const documents = await this.client.tag.findMany({
+      take: limit
+    });
+
+    return documents.map((doc) => this.createEntityFromDocument(doc));
   }
 }

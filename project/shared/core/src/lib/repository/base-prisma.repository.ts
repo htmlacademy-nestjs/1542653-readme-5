@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { PrismaClientService } from '@project/shared/config/blog';
 import { Entity, EntityIdType, DefaultPojoType } from './entity.interface';
 import { Repository } from './repository.interface';
