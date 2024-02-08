@@ -21,7 +21,7 @@ export class PostService {
             status: dto.status,
             tags: dto.tags,
             authorId: dto.authorId,
-            likesCount: 0
+            likesCount: 0,
         }
         switch(dto.type) {
             case PostTypes.Link: return new LinkPostEntity({
@@ -37,7 +37,7 @@ export class PostService {
             case PostTypes.Quote: return new QuotePostEntity({
                 ...post,
                 type: dto.type,
-                quoteAuthor: dto.quoteAuthor,
+                quoteAuthorId: dto.quoteAuthorId,
                 text: dto.text,
             })
             case PostTypes.Text: return new TextPostEntity({
@@ -56,16 +56,21 @@ export class PostService {
 
     public async createPost(dto: PostDTO): Promise<PostEntity> {
         const entityPost = this.createEntity(dto);
-
         const createdPost = await this.postRepository.save(entityPost);
 
         return createdPost;
     }
 
     public async updatePost(dto: PostDTO, id: string): Promise<PostEntity> {
-        const entityPost = this.createEntity(dto);
-
+        
         const post = await this.postRepository.findById(id);
+        const updatedDocument = {
+            ...post.toPOJO(),
+            ...dto,
+        }
+
+        const entityPost = this.createEntity(updatedDocument);
+
         if (!post) {
             throw new NotFoundException(`${POST_NOT_FOUND} id: ${id}`);
         }
@@ -88,9 +93,9 @@ export class PostService {
 
     }
 
-    public async find(limit?: string): Promise<PostEntity[]> {
+    public async find(authorId: string, limit?: string): Promise<PostEntity[]> {
         const postCount = Number(limit) ? Number(limit) : DEFAULT_LIMIT_ENTITIES;
-        const posts = await this.postRepository.find(postCount);
+        const posts = await this.postRepository.find(authorId, postCount);
         return posts;
     }
 
